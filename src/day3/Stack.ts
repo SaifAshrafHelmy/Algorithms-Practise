@@ -23,18 +23,16 @@ export default class Stack<T> {
         this.head = node;
     }
     pop(): T | undefined {
-        this.length = Math.max(0, this.length - 1);
         if (!this.head) {
             return undefined;
         }
-        if (this.length === 0) {
-            const head = this.head;
-            this.head = undefined;
-            return head.value;
-        }
-        const head = this.head as Node<T>;
+        this.length--;
+        const head = this.head;
         this.head = this.head.prev;
+
+        // free memory
         head.prev = undefined;
+
         return head.value;
     }
     peek(): T | undefined {
