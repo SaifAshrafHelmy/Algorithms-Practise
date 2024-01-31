@@ -1,10 +1,9 @@
 const dir = [
-    [-1, 0], // left
-    [1, 0], // right
-    [0, -1], // up
-    [0, 1], // down
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
 ];
-
 function walk(
     maze: string[],
     wall: string,
@@ -14,8 +13,8 @@ function walk(
     path: Point[],
 ): boolean {
     // A) Base Cases
+    // 3. We're off the map
 
-    // 1. Off the map
     if (
         curr.x < 0 ||
         curr.x > maze[0].length ||
@@ -24,22 +23,26 @@ function walk(
     ) {
         return false;
     }
-
-    // 2. It's a wall
-    if (maze[curr.y][curr.x] === wall) return false;
-    // 3. It's the end
+    // 1. It's a wall
+    if (maze[curr.y][curr.x] === wall) {
+        return false;
+    }
+    // 2. It's the end
     if (curr.x === end.x && curr.y === end.y) {
         path.push(curr);
         return true;
     }
-    // 4. If we've seen it before > fill it with false first
-    if (seen[curr.y][curr.x] === true) return false;
 
-    // B) Recursive case (3 steps)
-    // pre => push the point
-    seen[curr.y][curr.x] = true;
+    // 4. We've seen it before
+    if (seen[curr.y][curr.x] === true) {
+        return false;
+    }
+
+    // B) Recursive cases
+    // Pre
     path.push(curr);
-    // recurse (the visit)
+    seen[curr.y][curr.x] = true;
+    // Recurse all dirs
     for (let i = 0; i < dir.length; i++) {
         const [x, y] = dir[i];
         if (
@@ -58,7 +61,7 @@ function walk(
             return true;
         }
     }
-    // post => pop the point (if successful)
+    // Post
     path.pop();
 
     return false;
@@ -75,7 +78,6 @@ export default function solve(
     for (let i = 0; i < maze.length; i++) {
         seen.push(new Array(maze[0].length).fill(false));
     }
-
     walk(maze, wall, start, end, seen, path);
 
     return path;
